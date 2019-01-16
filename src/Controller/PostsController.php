@@ -3,6 +3,7 @@ namespace App\Controller;
 
 use App\Controller\AppController;
 
+
 /**
  * Posts Controller
  *
@@ -12,6 +13,15 @@ use App\Controller\AppController;
  */
 class PostsController extends AppController
 {
+    public function initialize()
+    {
+        parent::initialize();
+
+        $this->Auth->allow([
+            'index',
+            'view'
+        ]);
+    }
 
     /**
      * Index method
@@ -53,7 +63,10 @@ class PostsController extends AppController
     {
         $post = $this->Posts->newEntity();
         if ($this->request->is('post')) {
+
             $post = $this->Posts->patchEntity($post, $this->request->getData());
+            $post->user_id = $this->session->read('Auth.User.id');
+
             if ($this->Posts->save($post)) {
                 $this->Flash->success(__('The post has been saved.'));
 

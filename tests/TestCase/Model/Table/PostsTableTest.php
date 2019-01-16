@@ -4,6 +4,7 @@ namespace App\Test\TestCase\Model\Table;
 use App\Model\Table\PostsTable;
 use Cake\ORM\TableRegistry;
 use Cake\TestSuite\TestCase;
+use Cake\Utility\Text;
 
 /**
  * App\Model\Table\PostsTable Test Case
@@ -25,7 +26,7 @@ class PostsTableTest extends TestCase
      */
     public $fixtures = [
         'app.Posts',
-        'app.Users'
+        //'app.Users'
     ];
 
     /**
@@ -52,33 +53,37 @@ class PostsTableTest extends TestCase
         parent::tearDown();
     }
 
-    /**
-     * Test initialize method
-     *
-     * @return void
-     */
-    public function testInitialize()
+    public function testCreateSlug()
     {
-        $this->markTestIncomplete('Not implemented yet.');
+    $result = $this->Posts->createSlug('Hello World');
+    $this->assertEquals('hello-world', $result);
+
+    $result = $this->Posts->createSlug('Hello!, World');
+    $this->assertEquals('hello-world', $result);
+
+    $result = $this->Posts->createSlug('Hello   World*$');
+    $this->assertEquals('hello-world', $result);
+
+    $result = $this->Posts->createSlug('Hello-   World-');
+    $this->assertEquals('hello-world', $result);
     }
 
-    /**
-     * Test validationDefault method
-     *
-     * @return void
-     */
-    public function testValidationDefault()
+    public function  testBeforeMarshal()
     {
-        $this->markTestIncomplete('Not implemented yet.');
-    }
+        $article = $this->Posts->newEntity();
+        $article = $this->Posts->patchEntity($article, [
+            'title'=>'Hello World, It\'s a fine day',
+            'user_id'=>Text::uuid()
 
-    /**
-     * Test buildRules method
-     *
-     * @return void
-     */
-    public function testBuildRules()
-    {
-        $this->markTestIncomplete('Not implemented yet.');
+        ]);
+
+        $this->Posts->save($article);
+
+        $result = $this->Posts
+        ->find()
+        ->where(['slug'=>'hello-world-it-s-a-fine-day'])
+        ->first();
+        $this->assertEquals('hello-world-it-s-a-fine-day', $result['slug']);
     }
 }
+

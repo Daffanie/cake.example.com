@@ -13,16 +13,16 @@
     </ul>
 </nav>
 <div class="posts form large-9 medium-8 columns content">
-    <?= $this->Form->create($post) ?>
+    <?= $this->Form->create($post, ['novalidate'=>true]) ?>
     <fieldset>
         <legend><?= __('Add Post') ?></legend>
         <?php
             echo $this->Form->control('title');
-            echo $this->Form->control('slug');
+            //echo $this->Form->control('slug');
             echo $this->Form->control('meta_keywords');
             echo $this->Form->control('meta_description');
             echo $this->Form->control('body');
-            echo $this->Form->control('user_id', ['options' => $users, 'empty' => true]);
+            //echo $this->Form->control('user_id', ['options' => $users, 'empty' => true]);
         ?>
     </fieldset>
     <?= $this->Form->button(__('Submit')) ?>

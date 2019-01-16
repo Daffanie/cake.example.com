@@ -5,6 +5,7 @@ use Cake\ORM\Query;
 use Cake\ORM\RulesChecker;
 use Cake\ORM\Table;
 use Cake\Validation\Validator;
+use Cake\Utility\Text;
 
 /**
  * Posts Model
@@ -42,9 +43,18 @@ class PostsTable extends Table
         $this->addBehavior('Timestamp');
 
         $this->belongsTo('Users', [
+            'className'=>'Users.Users',
             'foreignKey' => 'user_id'
         ]);
     }
+
+    public function beforeMarshal($event, $data)
+    {
+        if (!isset($data['slug']) && !empty($data['title'])) {
+            $data['slug'] = $this->createSlug($data['title']);
+        }
+    }
+
 
     /**
      * Default validation rules.
@@ -60,13 +70,11 @@ class PostsTable extends Table
 
         $validator
             ->scalar('title')
-            ->maxLength('title', 255)
-            ->allowEmptyString('title');
+            ->maxLength('title', 255);
 
         $validator
             ->scalar('slug')
-            ->maxLength('slug', 255)
-            ->allowEmptyString('slug');
+            ->maxLength('slug', 255);
 
         $validator
             ->scalar('meta_keywords')
@@ -94,8 +102,22 @@ class PostsTable extends Table
      */
     public function buildRules(RulesChecker $rules)
     {
-        $rules->add($rules->existsIn(['user_id'], 'Users'));
+        //$rules->add($rules->existsIn(['user_id'], 'Users'));
 
         return $rules;
+    }
+
+    /**
+    * Return a slug of a given field
+    * @param string $title
+    * @return string
+    */
+    public function createSlug($title)
+    {
+    return Text::slug(
+        strtolower(
+            substr($title, 0, 191)
+        )
+    );
     }
 }

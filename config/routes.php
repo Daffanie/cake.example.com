@@ -92,7 +92,7 @@ Router::scope('/', function (RouteBuilder $routes) {
 });
 
 Router::scope('/users', ['plugin' => 'CakeDC/Users'], function ($routes) {
-    $routes->connect('/'. ['controller' => 'Users', 'action' =>'index']);
+    $routes->connect('/', ['controller' => 'Users', 'action' =>'index']);
     $routes->connect('/:action', ['controller' => 'Users']);
     $routes->fallbacks('DashedRoute');
 });
