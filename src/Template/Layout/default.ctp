@@ -43,7 +43,7 @@ $cakeDescription = 'CakePHP: the rapid development php framework';
         <div class="top-bar-section">
             <ul class="right">
 
-                <li><a href="/post">Blog</a></li>
+                <li><a href="/posts">Blog</a></li>
                 <?php if(!empty($session['id'])): ?>
                     <li><a href="logout">Logout</a></li>
                 <?php else: ?>

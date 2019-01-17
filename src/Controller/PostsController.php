@@ -21,6 +21,8 @@ class PostsController extends AppController
             'index',
             'view'
         ]);
+
+        $this->loadModel('Comments');
     }
 
     /**
@@ -51,7 +53,7 @@ class PostsController extends AppController
             'contain' => ['Users']
         ]);
 
-        $this->set('post', $post);
+        $this->set(compact('post', 'comments'));
     }
 
     /**
